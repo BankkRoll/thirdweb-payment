@@ -1,4 +1,4 @@
-# Payment Button Component
+# thirdweb-payment Button Component
 
 ## Overview
 
@@ -65,15 +65,49 @@ function Home() {
 
   return (
     <div>
-      <PaymentButton
-        recipient="0x1234567890abcdef"        // Ethereum address of the recipient
-        amount="0.001"                        // Amount in Ether to send
-        className="custom-button-style"       // Custom className for the button
-        buttonText="Pay with Ether"           // Custom text for the button
-        icon="💰"                             // Custom icon for the button
-        onPaymentSuccess={() => console.log('Payment Successful')}
-        onPaymentError={(error) => console.error('Payment Error:', error)}
-      />
+        <PaymentButton
+          // Required props
+          recipient="0x1234567890abcdef"         // Ethereum address of the recipient
+          amount="0.001"                         // Amount in Ether to send
+
+          // Optional props
+          className="custom-button-style"        // Custom className for the button
+          buttonText="Pay with Ether"            // Custom text for the button
+          icon="💰"                              // Custom icon for the button
+          customStyles={{
+            button: {
+            // Custom styles for the pay button
+            },
+            modalOverlay: {
+            // Custom styles for the modal overlay
+            },
+            modalContent: {
+            // Custom styles for the modal content
+            },
+            modalButton: {
+            // Custom styles for the modal button success
+            },
+            modalButtonCancel: {
+            // Custom styles for the modal button cancel
+            },
+            loader: {
+              container: {
+              // Custom styles for the loader container
+              },
+              spinner: {
+              // Custom styles for the loader spinner
+              },
+              text: {
+              // Custom styles for the loader text
+              },
+              link: {
+              // Custom styles for the loader txn link
+              },
+            },
+          }}
+          onPaymentSuccess={handlePaymentSuccess}
+          onPaymentError={handlePaymentError}
+        />
     </div>
   );
 }
@@ -86,18 +120,13 @@ export default Home;
 The `PaymentButton` component accepts the following props:
 
 - `recipient` (string): Ethereum address of the recipient of payments.
-- `amount` (string): Amount in Ether to charge.
+- `amount` (string): Amount in Ether to send.
 - `className` (string, optional): Custom className for the button.
 - `buttonText` (string, optional): Custom text for the button.
-- `icon` (string, optional): Custom icon for the button.
+- `icon` (React.ReactNode, optional): Custom icon element to display next to the button text.
+- `customStyles` (object, optional): Custom CSS styles for different parts of the component, including button, modal overlay, modal content, modal buttons, and loader.
 - `onPaymentSuccess` (function, optional): Callback function for successful payment.
 - `onPaymentError` (function, optional): Callback function for payment error.
-
-
-## Styling
-
-You can customize the button's appearance by providing a custom className using the `className` prop. The provided className will override the default styles.
-
 
 ## License
 

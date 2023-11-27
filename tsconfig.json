@@ -20,8 +20,7 @@
     "baseUrl": "./",                            // Base directory for non-relative modules
   },
   "include": [
-    "src/**/*",
-    "*.css"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
