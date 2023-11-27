@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "CommonJS",
+    "lib": ["dom", "dom.iterable", "esnext"],   // Include DOM and latest ECMAScript features
+    "allowJs": true,                            // Allow JavaScript files to be compiled
+    "jsx": "react",                             // Support JSX for React
+    "declaration": true,                        // Generate '.d.ts' files for TypeScript users
+    "declarationMap": true,                     // Generate sourcemaps for '.d.ts' files
+    "sourceMap": true,                          // Enable source map generation for debugging
+    "outDir": "./dist",                         // Output directory for compiled files
+    "rootDir": "./src",                         // Root directory of source files
+    "composite": true,                          // Enable composite project settings
+    "strict": true,                             // Enable all strict type-checking options
+    "esModuleInterop": true,                    // Interop between CommonJS and ES Modules
+    "forceConsistentCasingInFileNames": true,   // Ensure consistent casing in filenames
+    "skipLibCheck": true,                       // Skip type checking of declaration files
+    "resolveJsonModule": true,                   // Include JSON files in the import statements
+    "moduleResolution": "node",                 // Use Node.js style module resolution
+    "baseUrl": "./",                            // Base directory for non-relative modules
+  },
+  "include": [
+    "src/**/*",
+    "*.css"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
