@@ -41,7 +41,7 @@ const SpinnerLoading: React.FC<SpinnerLoadingProps> = ({
   const defaultSpinnerStyle: React.CSSProperties = {
     borderRadius: "50%",
     borderTop: "5px solid rgba(0, 0, 0, 0.2)",
-    borderLeft: "5px solid #3498db",
+    borderLeft: "5px solid #007bff",
     borderBottom: "5px solid rgba(0, 0, 0, 0.2)",
     borderRight: "5px solid rgba(0, 0, 0, 0.2)",
     width: "5em",
@@ -56,7 +56,7 @@ const SpinnerLoading: React.FC<SpinnerLoadingProps> = ({
 
   const defaultLinkStyle: React.CSSProperties = {
     fontSize: "18px",
-    color: "#3498db",
+    color: "#007bff",
     textDecoration: "underline",
     cursor: "pointer",
   };

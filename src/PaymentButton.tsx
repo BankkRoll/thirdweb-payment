@@ -128,28 +128,30 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
       case "Success":
         return (
           <div>
-            <h3>Payment Successful</h3>
-            <p>Thank you for your transaction!</p>
+            <h3 style={modalHeaderStyles}>Payment Successful</h3>
+            <p style={modalParagraphStyles}>Thank you for your transaction!</p>
             {txn && (
-              <div style={{ display: "flex", alignItems: "center" }}>
-                {explorerUrl ? (
-                  <a
-                    style={styles.modalButton}
-                    href={explorerUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+              <div style={styles.modalActions}>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  {explorerUrl ? (
+                    <a
+                      style={styles.modalButton}
+                      href={explorerUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View
+                    </a>
+                  ) : (
+                    txn
+                  )}
+                  <button
+                    style={styles.modalButtonCancel}
+                    onClick={handleCloseModal}
                   >
-                    View Transaction
-                  </a>
-                ) : (
-                  txn
-                )}
-                <button
-                  style={styles.modalButtonCancel}
-                  onClick={handleCloseModal}
-                >
-                  Close
-                </button>
+                    Close
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -157,25 +159,32 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
       case "Failed":
         return (
           <div>
-            <h3>Payment Failed</h3>
-            <p>An error occurred during the transaction.</p>
-            <button style={styles.modalButtonCancel} onClick={handleCloseModal}>
-              Close
-            </button>
+            <h3 style={modalHeaderStyles}>Payment Failed</h3>
+            <p style={modalParagraphStyles}>
+              An error occurred during the transaction.
+            </p>
+            <div style={styles.modalActions}>
+              <button
+                style={styles.modalButtonCancel}
+                onClick={handleCloseModal}
+              >
+                Close
+              </button>
+            </div>
           </div>
         );
       default:
         return (
           <div>
-            <h3>Confirm Payment</h3>
-            <p>
+            <h3 style={modalHeaderStyles}>Confirm Payment</h3>
+            <p style={modalParagraphStyles}>
               Recipient:{" "}
-              {`${recipient.substring(0, 6)}...${recipient.substring(
-                recipient.length - 6
-              )}`}
+              <span>{`${recipient.substring(0, 8)}...${recipient.substring(
+                recipient.length - 8
+              )}`}</span>
             </p>
-            <p>Amount: {amount}</p>
-            <div className="payment-modal-actions">
+            <p style={modalParagraphStyles}>Amount: {amount}</p>
+            <div style={styles.modalActions}>
               <button style={styles.modalButton} onClick={handlePayment}>
                 Confirm
               </button>
@@ -193,20 +202,21 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
 
   const buttonStyles: React.CSSProperties = {
     backgroundColor: "#007bff",
-    color: "white",
-    padding: "12px 24px",
-    border: "none",
-    borderRadius: "4px",
+    color: "#ffffff",
+    padding: "10px 20px",
+    border: "1px solid #002244",
+    borderRadius: "5px",
     cursor: "pointer",
-    transition: "background-color 0.3s, border-color 0.3s",
-    fontWeight: "bold",
-    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-    textTransform: "uppercase",
-    fontSize: "16px",
-    letterSpacing: "1px",
-    margin: "0 auto",
-    display: "block",
-    ...customStyles,
+    transition: "all 0.2s ease-in-out",
+    fontWeight: "600",
+    boxShadow: "0 3px 6px rgba(0, 0, 0, 0.16)",
+    fontSize: "14px",
+    letterSpacing: "normal",
+    margin: "8px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    ...customStyles.button,
   };
 
   const modalOverlayStyles: React.CSSProperties = {
@@ -215,47 +225,58 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.8)",
-    zIndex: 999,
+    backgroundColor: "rgba(50, 50, 50, 0.85)",
+    zIndex: 1050,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   };
 
   const modalContentStyles: React.CSSProperties = {
-    backgroundColor: "#1a1a1a",
-    color: "white",
+    backgroundColor: "#282c34",
+    color: "#fff",
     padding: "24px",
     borderRadius: "8px",
-    boxShadow: "0 6px 15px rgba(0, 0, 0, 0.6)",
-    zIndex: 1000,
-    width: "100%",
-    maxWidth: "400px",
+    boxShadow: "0 12px 24px rgba(0, 0, 0, 0.75)",
+    zIndex: 1050,
+    width: "400px",
+    height: "auto",
+    minHeight: "250px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
     ...modalStyle,
   };
 
   const modalButtonStyles: React.CSSProperties = {
-    backgroundColor: "#28a745",
+    backgroundColor: "#4caf50",
     color: "white",
     border: "none",
-    padding: "12px 20px",
-    margin: "0 10px",
+    padding: "12px 24px",
     borderRadius: "4px",
     cursor: "pointer",
-    transition: "background-color 0.2s",
-    fontWeight: "bold",
+    transition: "background-color 0.2s ease-in-out",
+    fontWeight: "500",
+    margin: "0",
+    flex: "1",
+    marginLeft: "10px",
+    marginRight: "10px",
   };
 
   const modalButtonCancelStyles: React.CSSProperties = {
-    backgroundColor: "#dc3545",
+    backgroundColor: "#f44336",
     color: "white",
     border: "none",
-    padding: "12px 20px",
-    margin: "0 10px",
+    padding: "12px 24px",
     borderRadius: "4px",
     cursor: "pointer",
-    transition: "background-color 0.2s",
-    fontWeight: "bold",
+    transition: "background-color 0.2s ease-in-out",
+    fontWeight: "500",
+    margin: "0",
+    flex: "1",
+    marginLeft: "10px",
+    marginRight: "10px",
   };
 
   const loaderStyles: React.CSSProperties = {
@@ -263,10 +284,31 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
     margin: "20px",
   };
 
+  const modalActionsStyles: React.CSSProperties = {
+    display: "flex",
+    justifyContent: "space-around",
+    paddingTop: "4rem",
+    width: "100%",
+  };
+
+  const modalHeaderStyles: React.CSSProperties = {
+    color: "#ffffff",
+    marginBottom: "6px",
+    textAlign: "center",
+    fontSize: "20px",
+  };
+
+  const modalParagraphStyles: React.CSSProperties = {
+    color: "#d1d1d1",
+    textAlign: "center",
+    fontSize: "16px",
+  };
+
   const styles = {
     paymentButton: buttonStyles,
     modalOverlay: modalOverlayStyles,
     modalContent: modalContentStyles,
+    modalActions: modalActionsStyles,
     modalButton: modalButtonStyles,
     modalButtonCancel: modalButtonCancelStyles,
     loader: loaderStyles,
@@ -307,7 +349,9 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
           )}
         </>
       ) : (
-        <ConnectWallet />
+        <ConnectWallet
+          style={{ ...styles.paymentButton, ...customStyles.button }}
+        />
       )}
     </div>
   );
