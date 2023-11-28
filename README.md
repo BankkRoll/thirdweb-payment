@@ -1,4 +1,5 @@
 # thirdweb-payment Button Component
+![ezgif com-video-to-gif](https://github.com/BankkRoll/thirdweb-payment/assets/106103625/3894f05a-91bf-4f56-a9db-91ff97579f45)
 
 ## Overview
 
