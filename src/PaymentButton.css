@@ -1,0 +1,340 @@
+.payment-button {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-weight: 600;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    font-size: 14px;
+    letter-spacing: normal;
+    margin: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes fadeInOverlay {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    animation: fadeInOverlay 0.5s forwards;
+    animation: fadeInOverlay 0.5s forwards;
+}
+
+@keyframes fadeInContent {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    background-color: hsl(230deg 11.63% 8.43%);
+    color: hsl(256, 6.0%, 93.2%);
+    padding: 24px;
+    border-radius: 20px;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    z-index: 10000;
+    width: calc(100vw - 40px);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    border: 1px solid hsl(230deg 11.63% 17%);
+    overflow: hidden;
+    font-family: inherit;
+    height: 570px;
+    max-width: 730px;
+    pointer-events: auto;
+    animation: fadeInContent 0.5s forwards;
+}
+
+.modal-button-confirm-before-terms {
+    padding: 12px 24px;
+    border-radius: 4px;
+    cursor: not-allowed;
+    font-weight: 500;
+    margin: 0 10px;
+    flex: 1;
+    transition: opacity 0.2s ease-in-out;
+    border: 1px solid transparent;
+    background-color: transparent;
+    color: #f44336;
+    border-color: #4caf50;
+}
+
+.modal-button-confirm,
+.modal-button-cancel {
+    padding: 12px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    margin: 0 10px;
+    flex: 1;
+    transition: all 0.3s ease-in-out;
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+    background-color: transparent;
+    color: inherit;
+}
+
+.modal-button-confirm {
+    border-color: #4caf50;
+}
+
+.modal-button-cancel {
+    border-color: #f44336;
+}
+
+.modal-button-confirm::before,
+.modal-button-cancel::before,
+.modal-button-confirm::after,
+.modal-button-cancel::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    transition: all 0.3s ease-in-out;
+    z-index: -1;
+}
+
+.modal-button-confirm::before,
+.modal-button-cancel::before {
+    background: inherit;
+}
+
+.modal-button-confirm:hover::before {
+    left: 0;
+    background-color: #4caf50;
+}
+
+.modal-button-cancel:hover::before {
+    left: 0;
+    background-color: #f44336;
+}
+
+.modal-button-confirm:hover,
+.modal-button-cancel:hover {
+    color: #fff;
+}
+
+.modal-button-confirm::after {
+    background-color: rgba(76, 175, 80, 0.5);
+}
+
+.modal-button-cancel::after {
+    background-color: rgba(244, 67, 54, 0.5);
+}
+
+.modal-button-confirm:hover::after,
+.modal-button-cancel:hover::after {
+    left: 0;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.modal-header {
+    color: #ffffff;
+    margin-bottom: 6px;
+    text-align: center;
+    font-size: 20px;
+    padding-bottom: 10px;
+}
+
+.modal-paragraph {
+    color: #d1d1d1;
+    text-align: center;
+    font-size: 14px;
+    text-overflow: ellipsis;
+}
+
+.loading-spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.loading-spinner {
+    border-radius: 50%;
+    border-top: 5px solid rgba(0, 0, 0, 0.2);
+    border-left: 5px solid #007bff;
+    border-bottom: 5px solid rgba(0, 0, 0, 0.2);
+    border-right: 5px solid rgba(0, 0, 0, 0.2);
+    width: 8em;
+    height: 8em;
+    animation: spin 1.5s infinite linear;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.transaction-details-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2rem;
+}
+
+.transaction-detail-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.transaction-detail-label {
+    color: #d1d1d1;
+    margin-right: 0.5rem;
+}
+
+.transaction-detail-value {
+    color: #ffffff;
+    margin-right: 0.2rem;
+}
+
+
+.transaction-add-detail-amount {
+    color: green;
+}
+
+.transaction-subtract-detail-amount {
+    color: red;
+}
+
+.content-container {
+    margin-bottom: 1.5rem;
+}
+
+.error-block {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px dashed #b91c1c;
+    font-size: 16px;
+    line-height: 1.5;
+    text-align: center;
+    max-width: 500px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    margin-top: 2rem !important;
+    margin: auto;
+}
+
+.additional-payment-button {
+    padding: 12px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    margin: auto;
+    margin-top: 2rem;
+    display: block;
+    transition: all 0.3s ease-in-out;
+    border: 1px solid #f44336;
+    position: relative;
+    overflow: hidden;
+    background-color: transparent;
+    color: #ffffff;
+}
+
+.additional-payment-button::before,
+.additional-payment-button::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    transition: all 0.3s ease-in-out;
+    z-index: -1;
+}
+
+.additional-payment-button::before {
+    background-color: #f44336;
+}
+
+.additional-payment-button::after {
+    background-color: rgba(244, 67, 54, 0.5);
+}
+
+.additional-payment-button:hover {
+    color: #fff;
+}
+
+.additional-payment-button:hover::before {
+    left: 0;
+}
+
+.additional-payment-button:hover::after {
+    left: 0;
+}
+
+.terms-container {
+    display: flex;
+    margin: auto;
+    width: 80%;
+    align-items: center;
+    position: absolute;
+    bottom: 5rem;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+.terms-check-box {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.terms-check-box-label {
+    color: #d1d1d1;
+    font-style: italic;
+    margin-left: 10px;
+    font-size: 12px;
+}
