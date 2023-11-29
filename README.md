@@ -1,5 +1,5 @@
 # thirdweb-payment Button Component
-![example](https://github.com/BankkRoll/thirdweb-payment/assets/106103625/68faa2f5-4af5-44b2-9c04-f9a57b3bd1f5)
+![example](https://github.com/BankkRoll/thirdweb-payment/assets/106103625/532d6f80-4b49-47bf-aa1e-58b27634ce5c)
 
 ## Overview
 
