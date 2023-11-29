@@ -1,5 +1,5 @@
 # thirdweb-payment Button Component
-![ezgif com-video-to-gif](https://github.com/BankkRoll/thirdweb-payment/assets/106103625/3894f05a-91bf-4f56-a9db-91ff97579f45)
+![example](https://github.com/BankkRoll/thirdweb-payment/assets/106103625/68faa2f5-4af5-44b2-9c04-f9a57b3bd1f5)
 
 ## Overview
 
@@ -77,7 +77,7 @@ function Home() {
           icon="💰"                              // Custom icon for the button
           customStyles={{
             button: {
-            // Custom styles for the pay button
+            // Custom styles for the connect & pay button
             },
             modalOverlay: {
             // Custom styles for the modal overlay
@@ -88,22 +88,47 @@ function Home() {
             modalButton: {
             // Custom styles for the modal button success
             },
+            modalButtonSuccess: {
+            // Custom styles for the modal button success
+            },
             modalButtonCancel: {
             // Custom styles for the modal button cancel
             },
-            loader: {
-              container: {
-              // Custom styles for the loader container
-              },
-              spinner: {
-              // Custom styles for the loader spinner
-              },
-              text: {
-              // Custom styles for the loader text
-              },
-              link: {
-              // Custom styles for the loader txn link
-              },
+            modalActions: {
+            // Custom styles for the modal actions container
+            },
+            modalHeader: {
+            // Custom styles for the modal header
+            },
+            modalParagraph: {
+            // Custom styles for the modal paragraph
+            },
+            loadingSpinnerContainer: {
+            // Custom styles for the modal loading spinner container
+            },
+            loadingSpinner: {
+            // Custom styles for the modal loading spinner
+            },
+            transactionDetailsContainer: {
+            // Custom styles for the transaction details container
+            },
+            detailRow: {
+            // Custom styles for the detail row
+            },
+            detailLabel: {
+            // Custom styles for the detail label
+            },
+            detailValue: {
+            // Custom styles for the detail value
+            },
+            detailSymbol: {
+            // Custom styles for the detail symbol
+            },
+            addDetailAmount: {
+            // Custom styles for the add detail amount
+            },
+            subtractDetailAmount: {
+            // Custom styles for the subtract detail amount
             },
           }}
           onPaymentSuccess={handlePaymentSuccess}
