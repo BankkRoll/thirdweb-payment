@@ -59,19 +59,8 @@ import { PaymentButton } from 'thirdweb-payment';
 import 'thirdweb-payment/dist/PaymentButton.css';
 
 function Home() {
-  // Callback function for successful payment
-  const handlePaymentSuccess = () => {
-    console.log('Payment successful');
-  };
-
-  // Callback function for payment error
-  const handlePaymentError = (error) => {
-    console.error('Payment error:', error);
-  };
 
   return (
-    <div>
- (
     <div>
         <PaymentButton
           // Required props
@@ -83,6 +72,9 @@ function Home() {
           termsText="Custom terms text"          // Custom terms text
           buttonText="Pay with Ether"            // Custom text for the button
           icon="💰"                              // Custom icon for the button
+          onPaymentSuccess={() => console.log('Payment Successful')}   // Custom success action
+          onPaymentError={(error) => console.error('Payment Error:', error)} // Custom error action
+          onTransactionLog={(log) => console.log('Transaction Log:', log)}  // Custom Transaction Logging
           
           // Custom classes (*YOU MAY NEED TO USE THE "!important" FLAG IN YOUR CSS TO OVERRIDE DEFAULT STYLES*)
           customClasses={{
@@ -116,8 +108,6 @@ function Home() {
             additionalPaymentButton: "custom-additional-payment-button",   // Custom className additional payment button
             errorBlock: "custom-error-block",                              // Custom className error block warning container
           }}
-          onPaymentSuccess={handlePaymentSuccess}
-          onPaymentError={handlePaymentError}
         />
     </div>
   );
@@ -139,6 +129,71 @@ The `PaymentButton` component accepts the following props:
 - `customClasses` (object, optional): Custom CSS styles for different parts of the component, including button, modal overlay, modal content, modal buttons, and loader.
 - `onPaymentSuccess` (function, optional): Callback function for successful payment.
 - `onPaymentError` (function, optional): Callback function for payment error.
+- `onTransactionLog` (function, optional): Callback function for transaction logging.
+
+## Logging
+
+The `onTransactionLog` event logging can be used to obtain transactions following the structure below:
+
+1. **Successful Payment**
+    ```json
+    {
+      "type": "success",
+      "transactionHash": "0xabc123...",
+      "from": "0xSenderAddress...",
+      "to": "0xRecipientAddress...",
+      "amount": "1000000000000000000", // 1 ETH in wei
+      "nonce": 0,
+      "gasLimit": "21000",
+      "gasPrice": "50000000000", // 50 Gwei in wei
+      "maxFeePerGas": null,
+      "maxPriorityFeePerGas": null,
+      "chainId": 1,
+      "initialAmount": "1", // ETH
+      "remainingAmount": "0.0"
+    }
+    ```
+
+2. **Payment Error**
+    ```json
+    {
+      "type": "error",
+      "errorMessage": "Insufficient funds",
+      "amount": "1000000000000000000",
+      "recipient": "0xRecipientAddress..."
+    }
+    ```
+
+3. **Successful Additional Payment**
+    ```json
+    {
+      "type": "additionalPaymentSuccess",
+      "transactionHash": "0xdef456...",
+      "from": "0xSenderAddress...",
+      "to": "0xRecipientAddress...",
+      "amount": "500000000000000000", // 0.5 ETH in wei
+      "nonce": 1,
+      "gasLimit": "21000",
+      "gasPrice": "55000000000", // 55 Gwei in wei
+      "maxFeePerGas": null,
+      "maxPriorityFeePerGas": null,
+      "chainId": 1,
+      "initialAmount": "1",
+      "remainingAmount": "0.0"
+    }
+    ```
+
+4. **Additional Payment Error**
+    ```json
+    {
+      "type": "additionalPaymentError",
+      "errorMessage": "Network error",
+      "initialAmount": "1",
+      "remainingAmount": "0.5",
+      "recipient": "0xRecipientAddress..."
+    }
+    ```
+
 
 ## License
 

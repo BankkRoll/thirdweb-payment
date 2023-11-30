@@ -14,6 +14,7 @@ import { ethers } from "ethers";
  * @param customClasses - Custom CSS styles for different parts of the component.
  * @param onPaymentSuccess - Callback function for successful payment.
  * @param onPaymentError - Callback function for payment error.
+ * @param onTransactionLog - Callback function for transaction log.
  */
 export interface PaymentButtonProps {
   recipient: string;
@@ -50,14 +51,15 @@ export interface PaymentButtonProps {
   };
   onPaymentSuccess?: () => void;
   onPaymentError?: (error: any) => void;
+  onTransactionLog?: (logData: any) => void;
 }
-
 
 const PaymentButton: React.FC<PaymentButtonProps> = ({
   recipient,
   amount,
   onPaymentSuccess,
   onPaymentError,
+  onTransactionLog,
   className,
   buttonText = "Buy Now",
   termsText = `I acknowledge that editing the transaction details may lead to a total loss of funds, and I agree to send the exact amount of ${amount} ETH to the specified recipient.`,
@@ -116,12 +118,12 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
       const txResponse = await signer.sendTransaction(tx);
       setTxn(txResponse.hash);
       const receipt = await txResponse.wait();
-
       const transaction = await signer.provider.getTransaction(txResponse.hash);
 
+      let owedAmount = "0.0";
       const sentAmount = ethers.utils.formatEther(transaction.value);
       if (transaction && sentAmount !== amount) {
-        const owedAmount = ethers.utils.formatEther(
+        owedAmount = ethers.utils.formatEther(
           ethers.utils.parseEther(amount).sub(transaction.value)
         );
         setValidationError(
@@ -137,18 +139,41 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
         setExplorerUrl(url);
         onPaymentSuccess && onPaymentSuccess();
         setPaymentConfirmed(true);
+
+        onTransactionLog &&
+          onTransactionLog({
+            type: "success",
+            transactionHash: txResponse.hash,
+            from: transaction.from,
+            to: transaction.to,
+            amount: transaction.value.toString(),
+            nonce: transaction.nonce,
+            gasLimit: transaction.gasLimit.toString(),
+            gasPrice: transaction.gasPrice?.toString(),
+            maxFeePerGas: transaction.maxFeePerGas?.toString(),
+            maxPriorityFeePerGas: transaction.maxPriorityFeePerGas?.toString(),
+            chainId: transaction.chainId,
+            initialAmount: amount,
+            remainingAmount: owedAmount,
+          });
       } else {
         setTransactionStatus("Failed");
         throw new Error("Payment transaction failed.");
       }
     } catch (error) {
       setTransactionStatus("Failed");
-      if (error instanceof Error && error.message) {
-        setError(error.message);
-      } else {
-        setError("An unknown error occurred");
-      }
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occurred";
+      setError(errorMessage);
       onPaymentError && onPaymentError(error);
+
+      onTransactionLog &&
+        onTransactionLog({
+          type: "error",
+          errorMessage: errorMessage,
+          amount,
+          recipient,
+        });
     } finally {
       setIsLoading(false);
     }
@@ -177,37 +202,55 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
 
       const txResponse = await signer.sendTransaction(tx);
       const receipt = await txResponse.wait();
+      const updatedTransaction = await signer.provider.getTransaction(
+        txResponse.hash
+      );
+      const updatedRemainingAmount = ethers.utils.formatEther(
+        ethers.utils.parseEther(amount).sub(updatedTransaction.value)
+      );
 
       if (receipt.status === 1) {
-        const updatedTransaction = await signer.provider.getTransaction(
-          txResponse.hash
-        );
-        const updatedRemainingAmount = ethers.utils.formatEther(
-          ethers.utils.parseEther(amount).sub(updatedTransaction.value)
-        );
+        setTransactionStatus("Success");
+        setValidationError(null);
+        setRemainingAmount(null);
+        onPaymentSuccess && onPaymentSuccess();
 
-        if (updatedRemainingAmount === "0.0") {
-          setTransactionStatus("Success");
-          setValidationError(null);
-          setRemainingAmount(null);
-          onPaymentSuccess && onPaymentSuccess();
-        } else {
-          setTransactionStatus("Success");
-          setValidationError(`You still owe ${updatedRemainingAmount} ETH.`);
-          setRemainingAmount(updatedRemainingAmount);
-        }
+        onTransactionLog &&
+          onTransactionLog({
+            type: "additionalPaymentSuccess",
+            transactionHash: txResponse.hash,
+            from: updatedTransaction.from,
+            to: updatedTransaction.to,
+            amount: updatedTransaction.value.toString(),
+            nonce: updatedTransaction.nonce,
+            gasLimit: updatedTransaction.gasLimit.toString(),
+            gasPrice: updatedTransaction.gasPrice?.toString(),
+            maxFeePerGas: updatedTransaction.maxFeePerGas?.toString(),
+            maxPriorityFeePerGas:
+              updatedTransaction.maxPriorityFeePerGas?.toString(),
+            chainId: updatedTransaction.chainId,
+            initialAmount: amount,
+            remainingAmount: updatedRemainingAmount,
+          });
       } else {
         setTransactionStatus("Failed");
         throw new Error("Payment transaction failed.");
       }
     } catch (error) {
       setTransactionStatus("Failed");
-      if (error instanceof Error && error.message) {
-        setError(`Additional payment failed: ${error.message}`);
-      } else {
-        setError("An unknown error occurred during additional payment");
-      }
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occurred";
+      setError(errorMessage);
       onPaymentError && onPaymentError(error);
+
+      onTransactionLog &&
+        onTransactionLog({
+          type: "additionalPaymentError",
+          errorMessage: errorMessage,
+          initialAmount: amount,
+          remainingAmount,
+          recipient,
+        });
     } finally {
       setIsLoading(false);
     }
@@ -404,7 +447,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
           )}
         </>
       ) : (
-        <ConnectWallet className="payment-button" />
+        <ConnectWallet switchToActiveChain={true} className="payment-button" />
       )}
     </div>
   );
