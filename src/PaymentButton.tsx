@@ -105,17 +105,22 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
     setTransactionStatus("Loading");
     setValidationError(null);
 
-    try {
-      if (!sdk) throw new Error("Please connect your wallet first.");
+    let valueInWei, txResponse;
 
-      const valueInWei = ethers.utils.parseEther(amount);
+    try {
+      if (!sdk)
+        throw new Error(
+          "SDK not initialized. Please connect your wallet first."
+        );
+
+      valueInWei = ethers.utils.parseEther(amount);
       const tx = { to: recipient, value: valueInWei };
       const signer = sdk.getSigner();
 
       if (!signer) throw new Error("Signer not available.");
       if (!signer.provider) throw new Error("Provider not available.");
 
-      const txResponse = await signer.sendTransaction(tx);
+      txResponse = await signer.sendTransaction(tx);
       setTxn(txResponse.hash);
       const receipt = await txResponse.wait();
       const transaction = await signer.provider.getTransaction(txResponse.hash);
@@ -127,7 +132,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
           ethers.utils.parseEther(amount).sub(transaction.value)
         );
         setValidationError(
-          `The sent amount does not match the requested amount. You still owe ${owedAmount} ETH.`
+          `Sent amount does not match the requested amount. You still owe ${owedAmount} ETH.`
         );
         setRemainingAmount(owedAmount);
       }
@@ -143,6 +148,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
         onTransactionLog &&
           onTransactionLog({
             type: "success",
+            userAddress: address,
             transactionHash: txResponse.hash,
             from: transaction.from,
             to: transaction.to,
@@ -155,6 +161,8 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
             chainId: transaction.chainId,
             initialAmount: amount,
             remainingAmount: owedAmount,
+            blockNumber: receipt.blockNumber,
+            timeStamp: new Date().toISOString(),
           });
       } else {
         setTransactionStatus("Failed");
@@ -171,8 +179,15 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
         onTransactionLog({
           type: "error",
           errorMessage: errorMessage,
-          amount,
-          recipient,
+          errorDetails: error instanceof Error ? error : null,
+          userAddress: address,
+          transactionData: {
+            to: recipient,
+            value: valueInWei ? valueInWei.toString() : "N/A",
+            initialAmount: amount,
+          },
+          transactionResponseHash: txResponse ? txResponse.hash : "N/A",
+          errorTime: new Date().toISOString(),
         });
     } finally {
       setIsLoading(false);
@@ -190,17 +205,22 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
     setError(null);
     setValidationError(null);
 
-    try {
-      if (!sdk) throw new Error("Please connect your wallet first.");
+    let remainingAmountInWei, txResponse;
 
-      const remainingAmountInWei = ethers.utils.parseEther(remainingAmount);
+    try {
+      if (!sdk)
+        throw new Error(
+          "SDK not initialized. Please connect your wallet first."
+        );
+
+      remainingAmountInWei = ethers.utils.parseEther(remainingAmount);
       const tx = { to: recipient, value: remainingAmountInWei };
       const signer = sdk.getSigner();
 
       if (!signer) throw new Error("Signer not available.");
       if (!signer.provider) throw new Error("Provider not available.");
 
-      const txResponse = await signer.sendTransaction(tx);
+      txResponse = await signer.sendTransaction(tx);
       const receipt = await txResponse.wait();
       const updatedTransaction = await signer.provider.getTransaction(
         txResponse.hash
@@ -218,6 +238,8 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
         onTransactionLog &&
           onTransactionLog({
             type: "additionalPaymentSuccess",
+            originalTransactionHash: txn,
+            userAddress: address,
             transactionHash: txResponse.hash,
             from: updatedTransaction.from,
             to: updatedTransaction.to,
@@ -231,10 +253,12 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
             chainId: updatedTransaction.chainId,
             initialAmount: amount,
             remainingAmount: updatedRemainingAmount,
+            blockNumber: receipt.blockNumber,
+            timeStamp: new Date().toISOString(),
           });
       } else {
         setTransactionStatus("Failed");
-        throw new Error("Payment transaction failed.");
+        throw new Error("Additional payment transaction failed.");
       }
     } catch (error) {
       setTransactionStatus("Failed");
@@ -246,10 +270,20 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
       onTransactionLog &&
         onTransactionLog({
           type: "additionalPaymentError",
+          originalTransactionHash: txn,
           errorMessage: errorMessage,
-          initialAmount: amount,
-          remainingAmount,
-          recipient,
+          errorDetails: error instanceof Error ? error : null,
+          userAddress: address,
+          transactionData: {
+            to: recipient,
+            value: remainingAmountInWei
+              ? remainingAmountInWei.toString()
+              : "N/A",
+            initialAmount: amount,
+            remainingAmount: remainingAmount,
+          },
+          transactionResponseHash: txResponse ? txResponse.hash : "N/A",
+          errorTime: new Date().toISOString(),
         });
     } finally {
       setIsLoading(false);
