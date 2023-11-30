@@ -133,12 +133,13 @@ The `PaymentButton` component accepts the following props:
 
 ## Logging
 
-The `onTransactionLog` event logging can be used to obtain transactions following the structure below:
+The `onTransactionLog` event logging can be used to obtain transaction details following the structure below:
 
 1. **Successful Payment**
     ```json
     {
       "type": "success",
+      "userAddress": "0xUserAddress...",
       "transactionHash": "0xabc123...",
       "from": "0xSenderAddress...",
       "to": "0xRecipientAddress...",
@@ -150,7 +151,9 @@ The `onTransactionLog` event logging can be used to obtain transactions followin
       "maxPriorityFeePerGas": null,
       "chainId": 1,
       "initialAmount": "1", // ETH
-      "remainingAmount": "0.0"
+      "remainingAmount": "0.0",
+      "blockNumber": 123456,
+      "timeStamp": "2023-01-01T00:00:00.000Z"
     }
     ```
 
@@ -159,8 +162,15 @@ The `onTransactionLog` event logging can be used to obtain transactions followin
     {
       "type": "error",
       "errorMessage": "Insufficient funds",
-      "amount": "1000000000000000000",
-      "recipient": "0xRecipientAddress..."
+      "errorDetails": "Error stack or details here",
+      "userAddress": "0xUserAddress...",
+      "transactionData": {
+        "to": "0xRecipientAddress...",
+        "value": "1000000000000000000",
+        "initialAmount": "1"
+      },
+      "transactionResponseHash": "0xabc123...",
+      "errorTime": "2023-01-01T00:00:00.000Z"
     }
     ```
 
@@ -168,6 +178,8 @@ The `onTransactionLog` event logging can be used to obtain transactions followin
     ```json
     {
       "type": "additionalPaymentSuccess",
+      "originalTransactionHash": "0xabc123...",
+      "userAddress": "0xUserAddress...",
       "transactionHash": "0xdef456...",
       "from": "0xSenderAddress...",
       "to": "0xRecipientAddress...",
@@ -179,7 +191,9 @@ The `onTransactionLog` event logging can be used to obtain transactions followin
       "maxPriorityFeePerGas": null,
       "chainId": 1,
       "initialAmount": "1",
-      "remainingAmount": "0.0"
+      "remainingAmount": "0.0",
+      "blockNumber": 123457,
+      "timeStamp": "2023-01-01T01:00:00.000Z"
     }
     ```
 
@@ -187,12 +201,21 @@ The `onTransactionLog` event logging can be used to obtain transactions followin
     ```json
     {
       "type": "additionalPaymentError",
+      "originalTransactionHash": "0xabc123...",
       "errorMessage": "Network error",
-      "initialAmount": "1",
-      "remainingAmount": "0.5",
-      "recipient": "0xRecipientAddress..."
+      "errorDetails": "Error stack or details here",
+      "userAddress": "0xUserAddress...",
+      "transactionData": {
+        "to": "0xRecipientAddress...",
+        "value": "500000000000000000", // 0.5 ETH in wei
+        "initialAmount": "1",
+        "remainingAmount": "0.5"
+      },
+      "transactionResponseHash": "0xdef456...",
+      "errorTime": "2023-01-01T01:00:00.000Z"
     }
     ```
+
 
 
 ## License
